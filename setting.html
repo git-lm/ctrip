@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true,
+			})
+			mui.plusReady(function(){
+				document.getElementsByClassName('mui-log-out')[0].addEventListener('tap',function(){
+					mui.confirm('确认退出吗？','退出提醒',['取消','确认'],function(e){
+						if(e.index == 1){
+							plus.storage.removeItem('userInfo');
+							var main = plus.webview.getWebviewById('my.html');
+							main.reload(true);
+							mui.back();
+						}
+					})
+					
+				})
+			})
+		</script>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">设置</h1>
+		</header>
+		<div class="mui-content">
+		    <ul class="mui-table-view">
+		            <li class="mui-table-view-cell mui-grzl-tx">
+		                <a class="mui-navigate-right">
+	                	 	<span class="mui-left ">1</span>
+		                    	个人资料
+	                      	<span class="mui-badge ">1</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	  <span class="mui-left ">1</span>
+	                    		修改密码
+	                    		<span class="mui-badge mui-badge-warning">这是您的昵称</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	   <span class="mui-left ">1</span>
+		                     修改手机号码
+		                     <span class="mui-badge mui-badge-warning">这是您的姓名</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	<span class="mui-left ">1</span>
+		                    微信通知服务
+		                      <span class="mui-badge mui-badge-warning">男</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	<span class="mui-left ">1</span>
+		                   	清理本地缓存
+		                   	  <span class="mui-badge mui-badge-warning">也许生日获取惊喜</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+	                		<span class="mui-left ">1</span>
+                     		检查更新
+                     		  <span class="mui-badge mui-badge-warning">还没有填写哦</span>
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+	                		<span class="mui-left ">1</span>
+                     		关于本产品
+                     		  <span class="mui-badge mui-badge-warning">还没有填写哦</span>
+		                </a>
+		            </li>
+		        </ul>
+		        <button type="button" class="mui-btn mui-btn-wh mui-btn-block mui-log-out">退出登录</button>
+		       
+		</div>
+	</body>
+
+</html>

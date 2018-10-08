@@ -1,0 +1,283 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mobileSelect.css"/>
+		<script src="js/mui.min.js"></script>
+		<script src="js/mobileSelect.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		   
+		</header>
+		<div class="mui-content  mui-flight">
+			<div id="slider" class="mui-slider" >
+			  <div class="mui-slider-group mui-slider-loop">
+			    <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+			    <div class="mui-slider-item mui-slider-item-duplicate">
+			      <a href="#">
+			        <img src="images/2.jpg">
+			      </a>
+			    </div>
+			    <!-- 第一张 -->
+			    <div class="mui-slider-item">
+			      <a href="#">
+			        <img src="images/1.jpg">
+			      </a>
+			    </div>
+			    <!-- 第二张 -->
+			    <div class="mui-slider-item">
+			      <a href="#">
+			        <img src="images/2.jpg">
+			      </a>
+			    </div>
+			   
+			    <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+			    <div class="mui-slider-item mui-slider-item-duplicate">
+			      <a href="#">
+			        <img src="images/1.jpg">
+			      </a>
+			    </div>
+			  </div>
+			  <div class="mui-slider-indicator">
+			    <div class="mui-indicator mui-active"></div>
+			    <div class="mui-indicator"></div>
+			    
+			  </div>
+			</div>
+		    <div class='index'>
+	<!-- nav start -->
+				<div class="nav_index">
+					<ul>
+					  <li class="on" id='one_way'><a href="javascript:;">单程</a></li>
+					  <li id="go_back"><a href="javascript:;">往返</a></li>
+					  <li id="many_way"><a href="javascript:;">多程</a></li>
+					</ul>
+			
+					<div class="news">
+					  <div class="fonts">出票后的通知</div>
+					</div>
+				</div>
+	  <!-- nav end -->
+	
+	  <!--gotime start-->
+			  	<div class="halfs">
+			  		<div class="flight_info">
+					  	<div class="city padding_top selectcity">
+					   	  	<div class="left" itemid="110100" id="fromAddress">北京 </div>
+					   	  	
+					   	  	<img src="images/circle.png" alt="" class="circle">
+					   	  	<div class="right" itemid="310100" id="toAddress">上海 </div>
+					   	</div>
+					
+					   	<div class=" padding_top">
+					   	 	<span class="gotime">2月15日</span><!--<i class="gray">周五</i>-->
+					   	 	<input id="gotime" value="0" type="hidden">
+					   	 	<span class="backtime mui-pull-right">2月15日</span>
+					   	 	<input id="backtime" value="0" type="hidden">
+					   	</div>
+					
+					   	<div class="city padding_top">
+					   	  	<div class="left">经济舱</div>
+					   	  	<!--<div class="right pnumber">1人</div>-->
+					   	  	<input id="pnumber" type="hidden">
+					   	</div>
+					</div>
+					<input id="triptype" value="1" type="hidden">
+				   	<a href="javascript:;" class="seash reserve">预定</a>
+				</div>
+			</div>
+		<ul class="mui-table-view mui-grid-view mui-grid-9 mui-flight-view">
+			<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+			    <a href="#">
+			        <span class="mui-icon mui-icon-home"></span>
+			        <div class="mui-media-body">酒店</div>
+			    </a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+			    <a href="#">
+			        <span class="mui-icon mui-icon-email"></span>
+			        <div class="mui-media-body">景点门票</div>
+			    </a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+			    <a href="#">
+			        <span class="mui-icon mui-icon-chatbubble"></span>
+			        <div class="mui-media-body">定制巴士</div>
+			    </a>
+			</li>
+			<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3 match">
+			    <a href="#">
+			        <span class="mui-icon mui-icon-location"></span>
+			        <div class="mui-media-body ">赛事通知</div>
+			    </a>
+			</li>
+			
+		</ul>
+		<!--footer部分-->
+   
+		</div>
+		
+		<script type="text/javascript">
+			mui.init({
+				preloadPages:[{
+					url	:'match.html',
+					id	:'match.html'
+				}]
+			});
+			
+//			var number = new MobileSelect({
+//			    trigger: '.pnumber',
+//			    title: '选择人数',
+//			    position:[0],
+//			    wheels: [
+//			                {data: numberArr}
+//			            ],
+//			    callback:function(indexArr, data){
+//			        document.getElementById('pnumber').value = data;
+//			    }
+//			});
+			mui('.selectcity').on('tap','div',function(){
+				var id = this.id;
+				
+				mui.openWindow({
+					url :'indexedlist.html',
+					id :'indexedlists.html',
+					extras:{
+						divID : id
+					}
+					
+				})
+			})
+			window.addEventListener("changeCity", function(e) {
+				var cl =  document.getElementById(e.detail.divID);
+	               cl.innerHTML = e.detail.address;
+	               cl.setAttribute('itemid' , e.detail.pid);
+            });
+            mui.ready(function(){
+            	var date = new Date();
+            	var month = date.getMonth();
+            	var day = date.getDate();
+            	
+            	var monthArr = ['01月','02月','03月','04月','05月','06月','07月','08月','09月','10月','11月','12月'];
+				var dayArr = new Array();
+				for(var i = 1 ; i < 32 ; i++){ 
+					if(i < 10){
+						i='0'+i
+					}
+					dayArr.push(i+'日');
+				}
+	//			var numberArr = ['1','2','3','4'];
+				
+				var gotime = new MobileSelect({
+				    trigger: '.gotime',
+				    title: '出发时间',
+				    position:[month,day],
+				    wheels: [
+				                {data: monthArr},
+				                {data: dayArr}
+				            ],
+				    callback:function(indexArr, data){
+				        document.getElementById('gotime').value = data;
+				    }
+				});
+				var backtime = new MobileSelect({
+				    trigger: '.backtime',
+				    title: '返回时间',
+				    position:[month,day],
+				    wheels: [
+				                {data: monthArr},
+				                {data: dayArr}
+				            ],
+				    callback:function(indexArr, data){
+				       document.getElementById('backtime').value = data;
+				    }
+				});
+				if(month + 1 < 10){
+					month = '0'+(month +1 );
+				}else{
+					month = month +1 ;
+				}
+				if(day+ 1 < 10){
+					day = '0'+(day +1 );
+				}else{
+					day = day + 1 ;
+				}
+            	$('.gotime').html(month+'月'+day+'日');
+            	$('.backtime').html(month+'月'+day+'日');
+            	$('#gotime').val(month+'月'+','+day +'日');
+            	$('#backtime').val(month +'月'+','+day +'日');
+            	mui('.nav_index').on('tap','ul li',function(){
+            		var _this = this;
+            		mui('.nav_index ul li').each(function(){
+            			this.classList.remove('on');
+
+            		})
+            		_this.classList.add('on');
+            		var li_id = _this.getAttribute('id');
+            		if(li_id =='one_way'){
+            			document.getElementsByClassName('backtime')[0].setAttribute('style','display: none')
+            			document.getElementById('triptype').value = 1 ;
+            		}else{
+            			document.getElementsByClassName('backtime')[0].setAttribute('style','display: block')
+            			document.getElementById('triptype').value = 2 ;
+            		}
+            	})
+            })
+            mui.plusReady(function(){
+            	plus.storage.removeItem('order');
+            	var currentType = plus.networkinfo.getCurrentType();
+            	
+            	document.getElementsByClassName('match')[0].addEventListener('tap',function(){
+          			mui.openWindow('match.html');
+            	})
+            	document.getElementsByClassName('reserve')[0].addEventListener('tap',function(){
+            		if( currentType==0){
+            			mui.toast('未知网络状态，请查看网络连接是否正常');
+            			return;
+	            	}else if(currentType == 1){
+	            		mui.toast('请开启网络状态');
+	            		return;
+	            	}
+            		var fromAddress = document.getElementById('fromAddress').getAttribute('itemid');
+            		var toAddress = document.getElementById('toAddress').getAttribute('itemid');
+            		var fromAddressName = document.getElementById('fromAddress').innerHTML;
+            		var toAddressName = document.getElementById('toAddress').innerHTML;
+            		var gotime = document.getElementById('gotime').value;
+            		var backtime = document.getElementById('backtime').value; 
+            		var triptype = document.getElementById('triptype').value;
+//          		var pnumber = document.getElementById('pnumber').value;
+            		mui.openWindow({
+            			url:'reserve.html',
+            			id :'reserve.html',
+            			extras :{
+            				fromAddress	:fromAddress,
+            				fromAddressName:fromAddressName,
+            				toAddress	:toAddress,
+            				toAddressName:toAddressName,
+            				gotime		:gotime,
+            				backtime	:backtime,
+            				triptype	:triptype
+//          				pnumber		:pnumber
+            			}
+            		})
+            	})
+            	mui('.mui-flight-view').on('tap','li',function(){
+            		if(!this.classList.contains('match')){
+            			mui.toast('正在开发，敬请期待')
+            		}
+            	})
+            })
+		</script>
+	</body>
+
+</html>

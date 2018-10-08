@@ -1,0 +1,181 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		
+		<div class="mui-content orderView" >
+		    
+  <!-- nav end -->
+
+  <!--list start-->
+			<div class="list">
+			  <ul>
+			  	
+		
+			  </ul>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		mui.init({
+//			pullRefresh : {
+//			    container:".orderView",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+//			    down : {
+//			     
+//			      callback :function(){
+//			      	mui('.orderView').pullRefresh().endPulldownToRefresh();
+//			      } //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+//			    }
+//			  }
+			})
+		mui.ready(function(){
+		
+			mui('.orderView').on('tap','.del_order',function(){
+				var userInfo = plus.storage.getItem('userInfo');
+				var oid = $(this).attr('itemid');
+				var _this = $(this);
+				mui.confirm('确认删除吗？','删除订单',['取消','确认'],function(e){
+					if(e.index == 1){
+						plus.nativeUI.showWaiting('正在删除...');
+						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderDel',{ 
+							data:{
+								'oid':oid,
+								'userInfo':userInfo
+							},
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；              
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								if(data.state =='nologin'){
+									mui.toast('请重新登录');
+								}else if(data.state =='ok'){
+									mui.toast('删除成功');
+									_this.parent().parent().remove();
+								}else if(data =='no'){
+									mui.toast('删除失败');
+								}else{
+									mui.toast('异常');
+								}
+								
+							},
+							error:function(xhr,type,errorThrown){
+								mui.toast('系统异常');
+							}
+						});		
+					}
+				})
+
+			})
+				
+		})
+		mui.plusReady(function(){
+			getOrders('refund');
+			
+		})
+		
+		function  getOrders(type){
+			var userInfo = plus.storage.getItem('userInfo');
+			
+			mui.ajax('http://192.168.0.103/ctrip/ticketapi/getMemberTickets',{ 
+				data:{
+					'userInfo':userInfo,
+					'type':type
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；              
+				success:function(data){ 
+					if(data.state =='ok'){
+						var orders = data.msg;
+						var html ='';
+						for(var i = 0 ; i < orders.length ; i ++){
+							var stateHtml = '';
+							var payHtml = '';
+							var refundHtml = '';
+							if(orders[i].state == 0){
+								stateHtml ='<span class="order_state red">待出票</span>';
+							}else if(orders[i].state == 3){
+								if(orders[i].iscancel == 0){
+									stateHtml ='<span class="order_state red">已出票</span>';
+								}
+								
+							}
+							if(orders[i].ispay == 0){
+								payHtml = '<a class="pay_order" href="javascrript:;">点击付款</a>';
+							}
+							if(orders[i].pay_state == 1){
+								payStateHtml = '<span class="number">直接购买</span>';
+							}else{
+								payStateHtml = '<span class="number">预约低价</span>';
+							}
+							var tripHtml = '';
+							if(orders[i].trip_type == 1){
+								tripHtml = '<span class="number">单程</span>'
+											+'<span class="number">'+orders[i].goflight+'</span>'
+								
+							}else{
+								tripHtml = '<span class="number">往返</span>';
+											+'<span class="number">'+orders[i].goflight+'/'+orders[i].backflight+'</span>'
+							}
+							var diffHtml = '';
+							var diffBtn = '';
+							if(orders[i].iscancel == 1){
+								diffHtml = ' <div class="state gray">订单状态：已取消<span class="red_Add"><i class="red">+</i>￥'+orders[i].diff_price+'</span></div>';
+							}else{
+								if(orders[i].diff_type !=undefined && orders[i].diff_price !=undefined && orders[i].diff_ispay !=undefined){
+									if(orders[i].diff_type == 1){
+										diffBtn = '<a class="supplement_order" itemid="'+orders[i].id+'">补差价</a>';
+										diffHtml = ' <div class="state gray">订单状态：补差价<span class="red_Add"><i class="red">+</i>￥'+orders[i].diff_price+'</span></div>';
+									}else if(orders[i].diff_type == 2){
+										diffHtml = ' <div class="state gray">订单状态：退余额<span class="red_Add"><i class="red">-</i>￥'+orders[i].diff_price+'</span></div>';
+									}
+								}
+							}
+							html +='<li>'
+							  		+'<div class="top">'
+							  		+'<img src="images/fly.png" alt="" class="icon_img">'
+							  		+'<div class="right">'
+							  		+'<div class="right_top">'
+								  	+'<div class="list_top left">飞机票 '+tripHtml+'</div>'
+								  	+'<div class="list_top"></div>'
+								  	+'<div class="list_top right"><i class="blank">全部金额</i></div>'
+							  		+'</div>'
+						            +'<div class="zhan">'+orders[i].formCityName+'--'+orders[i].toCityName+payStateHtml+stateHtml+'</div>'
+						            +'<div class="time gray">出发时间：'+orders[i].goMonth+'月'+orders[i].goDate+'日<span class="red_Add"><i class="red">+</i>￥83</span></div>'
+						            +diffHtml
+						 			+'</div>'
+							  		+'</div>'
+						    		+'<div class="btns">'
+						    		+diffBtn
+						    		+'<a class="del_order" itemid="'+orders[i].id+'">删除订单</a>'
+							  		+'<a href="javascrript:;">在线咨询</a>'
+							  		+'</div>'
+							  		+'</li>';
+						}
+						$('.orderView .list ul').html(html); 
+					}else{ 
+						mui.toast(data.msg);
+					}
+					
+				},
+				error:function(xhr,type,errorThrown){
+					console.log(xhr)
+					console.log(type)
+					console.log(errorThrown)
+					mui.toast('系统异常');
+				}
+			});		
+		}
+	</script>
+</html>

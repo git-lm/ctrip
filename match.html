@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">赛事通知</h1>
+		</header>
+		<div class="mui-content mui-match" >
+			<div id="slider" class="mui-slider">
+				<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div class="mui-scroll types">
+						
+						
+					</div>
+				</div>
+            </div>
+            
+            
+            
+            <div class="mui-match-lists">
+	            <ul class="mui-table-view mui events">
+	                
+	            </ul>
+            </div>
+		</div>
+		<nav class="mui-bar mui-bar-tab">
+		    <a class="mui-tab-item mui-active">
+		        <span class="mui-icon mui-icon-flag"></span>
+		        <span class="mui-tab-label">目的地</span>
+		    </a>
+		    <a class="mui-tab-item">
+		        <span class="mui-icon mui-icon-search"></span>
+		        <span class="mui-tab-label">筛选</span>
+		    </a>
+		    <a class="mui-tab-item">
+		        <span class="mui-icon mui-icon-pulldown"></span>
+		        <span class="mui-tab-label">综合排序</span>
+		    </a>
+		    
+		</nav>
+	</body>
+	<script type="text/javascript">
+		mui.init( )
+		mui.plusReady(function(){
+			var currentType = plus.networkinfo.getCurrentType();
+			//获取导航以及全部数据
+			if( currentType==0){
+    			mui.toast('未知网络状态，请查看网络连接是否正常');
+    			return;
+        	}else if(currentType == 1){
+        		mui.toast('请开启网络状态');
+        		return;
+        	}else if(currentType != 3){
+        		mui.toast('正在使用蜂窝移动数据，请注意流量数据');
+        	}
+        	getEventTypes();
+        	getEvents(0);
+					
+			mui('.types').on('tap','a',function(){
+				var type = $(this).attr('itemid');
+				if( currentType==0){
+        			mui.toast('未知网络状态，请查看网络连接是否正常');
+        			return;
+            	}else if(currentType == 1){
+            		mui.toast('请开启网络状态');
+            		return;
+            	}else if(currentType != 3){
+            		mui.toast('正在使用蜂窝移动数据，请注意流量数据');
+            	}
+				getEvents(type);
+					
+				
+			})
+			mui('.mui-match-lists').on('tap','ul li',function(){
+				var mid = $(this).attr('itemid');
+				mui.openWindow({
+					url	:	'match_info.html',
+					id	:	'match_info.html',
+					extras	:{
+						mid	:mid
+					}
+				})
+			})
+		})
+		//获取赛事类型
+		function getEventTypes(){
+			plus.nativeUI.showWaiting('数据加载中...')
+			mui.ajax('http://192.168.0.103/ctrip/eventapi/getEventTypes',{ 
+				dataType:'json',//服务器返回json格式数据
+				type:'get',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；              
+				success:function(data){
+					plus.nativeUI.closeWaiting();
+					 var typehtml = '<a class="mui-control-item mui-active" itemid="0" > 全部 </a>';
+					
+					 for(var i = 0 ; i < data.length ; i++){
+					 	typehtml +='<a class="mui-control-item" itemid="'+data[i].id+'"> '+data[i].name+' </a>';
+					 }
+					$('.types').append(typehtml);
+					
+				},
+				error:function(xhr,type,errorThrown){
+					plus.nativeUI.closeWaiting();
+					mui.toast('系统异常');
+				}
+			});
+		}
+		//获取所有赛事信息
+		function getEvents(type){
+			plus.nativeUI.showWaiting('数据加载中...')
+			mui.ajax('http://192.168.0.103/ctrip/eventapi/getEvents',{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				data : {'type':type},
+				timeout:10000,//超时时间设置为10秒；              
+				success:function(data){
+					 var eventhtml = '';
+					for(var j = 0 ; j< data.length ; j++){
+						eventhtml +='<li itemid="'+data[j].id+'" class="mui-table-view-cell mui-media">'
+				                    +'<a href="javascript:;">'
+				                    +'<img class="mui-media-object mui-pull-left" src="images/zt1.jpg">'
+				                    +'<div class="mui-media-body">'
+				                    +'<p class="mui-ellipsis-2 match-title">'+data[j].title+'</p>'
+				                    +'<p class="mui-ellipsis mui-match-bc">班期：'+data[j].schedule+'</p>'
+				                    +'<span class="match-score">'+data[j].score+'分</span><span>'+data[j].number+'出游</span><span class="match-price">￥'+data[j].price+'起</span>'
+				                    +'</div>'
+				                    +'</a>'
+				                +'</li>';
+					}
+					$('.events').html(eventhtml);
+					plus.nativeUI.closeWaiting(); 
+				},
+				error:function(xhr,type,errorThrown){
+					plus.nativeUI.closeWaiting();
+					mui.toast('系统异常');
+				}
+			});	
+		}
+		
+		
+		
+		
+		
+	</script>
+</html>

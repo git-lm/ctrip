@@ -1,0 +1,361 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		
+	</head>
+	
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			 <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">我的订单</h1>
+		</header>
+		<div class="nav">
+			<ul>
+			  <li  class="on" itemtype="all"><a>全部订单</a></li>
+			  <li itemtype="pay"><a>待付款</a></li>
+			  <li itemtype="refund"><a>退款信息</a></li>
+			</ul>
+		</div>
+		<div class="mui-content orderView" style="margin-top: 40px;" >
+			<div class="list">
+			  <ul>
+			  </ul>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		mui.init({
+			pullRefresh : {
+			    container:".orderView",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+			    down : {
+			      style:'circle',//必选，下拉刷新样式，目前支持原生5+ ‘circle’ 样式
+			      color:'#2BD009', //可选，默认“#2BD009” 下拉刷新控件颜色
+			      height:'50px',//可选,默认50px.下拉刷新控件的高度,
+			      range:'100px', //可选 默认100px,控件可下拉拖拽的范围
+			      offset:'100px', //可选 默认0px,下拉刷新控件的起始位置
+			      auto: false,//可选,默认false.首次加载自动上拉刷新一次
+			      callback :function(){
+					getOrders();
+			      	mui('.orderView').pullRefresh().endPulldownToRefresh();
+			      } //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+			    }
+			  }
+			})
+		//定义一个类型  获取所在状态
+		
+		mui.ready(function(){
+			//删除菜单
+			mui('.orderView').on('tap','.del_order',function(){
+				var userInfo = plus.storage.getItem('userInfo');
+				var oid = $(this).attr('itemid');
+				var _this = $(this);
+				mui.confirm('确认删除吗？','删除订单',['取消','确认'],function(e){
+					if(e.index == 1){
+						plus.nativeUI.showWaiting('正在删除...');
+						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderDel',{ 
+							data:{
+								'oid':oid,
+								'userInfo':userInfo
+							},
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；              
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								if(data.state =='nologin'){
+									mui.toast('请重新登录');
+								}else if(data.state =='ok'){
+									mui.toast('删除成功');
+									getOrders();
+								}else if(data =='no'){
+									mui.toast('删除失败');
+								}else{
+									mui.toast('异常');
+								}
+								
+							},
+							error:function(xhr,type,errorThrown){
+								plus.nativeUI.closeWaiting();
+								mui.toast('系统异常');
+							}
+						});		
+					}
+				})
+
+			})
+			//支付订单
+			mui('.orderView').on('tap','.pay_order',function(){
+				var userInfo = plus.storage.getItem('userInfo');
+				var oid = $(this).attr('itemid');
+				var _this = $(this);
+				mui.confirm('确认支付吗？','支付订单',['取消','确认'],function(e){
+					if(e.index == 1){
+						plus.nativeUI.showWaiting('正在支付...');
+						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderPay',{ 
+							data:{
+								'oid':oid,
+								'userInfo':userInfo
+							},
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；              
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								if(data.state =='nologin'){
+									mui.toast('请重新登录');
+								}else if(data.state =='ok'){
+									mui.toast('支付成功');
+									getOrders();
+								}else if(data =='no'){
+									mui.toast('支付失败');
+								}else{
+									mui.toast('异常');
+								}
+								
+							},
+							error:function(xhr,type,errorThrown){
+								plus.nativeUI.closeWaiting();
+								mui.toast('系统异常');
+							}
+						});		
+					}
+				})
+
+			})
+			//补差价
+			mui('.orderView').on('tap','.supplement_order',function(){
+				var supplement_price = $(this).attr('itemprice');
+				var userInfo = plus.storage.getItem('userInfo');
+				var oid = $(this).attr('itemid');
+				var _this = $(this);
+				mui.confirm('确认补差价'+supplement_price+'元吗？','确认补差价',['取消','确认'],function(e){
+					if(e.index == 1){
+						plus.nativeUI.showWaiting('正在支付...');
+						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderSupplement',{ 
+							data:{
+								'oid':oid,
+								'userInfo':userInfo
+							},
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；              
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								if(data.state =='nologin'){
+									mui.toast('请重新登录');
+								}else if(data.state =='ok'){
+									mui.toast('支付成功');
+									getOrders();
+								}else if(data =='no'){
+									mui.toast('支付失败');
+								}else{
+									mui.toast('异常');
+								}
+								
+							},
+							error:function(xhr,type,errorThrown){
+								plus.nativeUI.closeWaiting();
+								mui.toast('系统异常');
+							}
+						});		
+					}
+				})
+
+			})
+			
+			//申请退款
+			mui('.orderView').on('tap','.refund_order',function(){
+				var userInfo = plus.storage.getItem('userInfo');
+				var oid = $(this).attr('itemid');
+				var _this = $(this);
+				mui.confirm('确认要申请退款吗？','申请退款',['取消','确认'],function(e){
+					if(e.index == 1){
+						plus.nativeUI.showWaiting('申请中...');
+						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderRefund',{ 
+							data:{
+								'oid':oid,
+								'userInfo':userInfo
+							},
+							dataType:'json',//服务器返回json格式数据
+							type:'post',//HTTP请求类型
+							timeout:10000,//超时时间设置为10秒；              
+							success:function(data){
+								plus.nativeUI.closeWaiting();
+								if(data.state =='nologin'){
+									mui.toast('请重新登录');
+								}else if(data.state =='ok'){
+									mui.toast('申请成功');
+									getOrders();
+								}else if(data =='no'){
+									mui.toast('申请失败');
+								}else{
+									mui.toast('异常');
+								}
+								
+							},
+							error:function(xhr,type,errorThrown){
+								plus.nativeUI.closeWaiting();
+								mui.toast('系统异常');
+							}
+						});		
+					}
+				})
+
+			})
+				
+		})
+		mui.plusReady(function(){
+			getOrders();
+			mui('.nav').on('tap', 'ul li', function(e) {
+				if(this.getAttribute('class') == 'on'){
+					return;
+				}
+				mui('.nav ul li').each(function(){
+					this.classList.remove('on');
+				})
+				this.classList.add('on');
+				getOrders();
+			})
+			
+		})
+		
+		function  getOrders(){
+			var ordertype = $('.on').attr('itemtype')
+			var userInfo = plus.storage.getItem('userInfo');
+			plus.nativeUI.showWaiting('正在加载...')
+			mui.ajax('http://192.168.0.103/ctrip/ticketapi/getMemberTickets',{
+				
+				data:{
+					'userInfo':userInfo,
+					'type':ordertype
+				},
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；              
+				success:function(data){
+					plus.nativeUI.closeWaiting();
+					if(data.state =='ok'){
+						
+						var orders = data.orders;
+						var html ='';
+						
+						for(var i = 0 ; i < orders.length ; i ++){
+							var stateHtml = '';
+							var refundHtml = '';
+								if(orders[i].isstatetype == 0){
+									stateHtml ='<span class="order_state red">异常状态</span>';
+								}else if(orders[i].isstatetype == 1){
+									stateHtml ='<span class="order_state red">未支付</span>';
+								}else if(orders[i].isstatetype == 2){
+									stateHtml ='<span class="order_state red">待处理</span>';
+									if(orders[i].isrefundtype){
+										refundHtml = '<a class="refund_order" itemid="'+orders[i].id+'" href="javascrript:;">申请退款</a>';
+									}
+								}else if(orders[i].isstatetype == 3){
+									stateHtml ='<span class="order_state red">出票中</span>';
+								}else if(orders[i].isstatetype == 4){
+									stateHtml ='<span class="order_state red">补差价</span>';
+									if(orders[i].isrefundtype){
+										refundHtml = '<a class="refund_order" itemid="'+orders[i].id+'" href="javascrript:;">申请退款</a>';
+									}
+									
+								}else if(orders[i].isstatetype == 5){
+									stateHtml ='<span class="order_state red">处理中</span>';
+								}else if(orders[i].isstatetype == 6){
+									stateHtml ='<span class="order_state red">退款待处理</span>';
+								}else if(orders[i].isstatetype == 7){
+									stateHtml ='<span class="order_state red">退款中</span>';
+								}else if(orders[i].isstatetype == 8){
+									stateHtml ='<span class="order_state red">已退款</span>';
+								}else if(orders[i].isstatetype == 99){
+									stateHtml ='<span class="order_state red">订单已取消</span>';
+								}else if(orders[i].isstatetype == 100){
+									stateHtml ='<span class="order_state red">完成订单</span>';
+								}
+							
+							
+							console.log(orders[i].pay_state)
+							if(orders[i].pay_state == 1){
+								payStateHtml = '<span class="number">直接购买</span>';
+							}else{
+								payStateHtml = '<span class="number">预约低价</span>';
+							}
+							var tripHtml = '';
+							if(orders[i].trip_type == 1){
+								tripHtml = '<span class="number">单程</span>';
+							}else{
+								tripHtml = '<span class="number">往返</span>';
+							}
+							var journeys = orders[i].journeys;
+							var journeyHtml = '';
+							for(var j = 0 ; j< journeys.length ; j++){
+								var pay_price = '';
+								var state = '';
+								if(j == journeys.length -1 ){
+									pay_price = '<span class="red_Add"><i class="red">+</i>￥'+orders[i].pay_price+'</span>';
+								}
+								if(j == 0 ){
+									state = stateHtml;
+								}
+								journeyHtml += '<div class="zhan">'+journeys[j].formCityName+'->'+journeys[j].toCityName+ state +'</div>'
+											+'<div class="time gray">出发时间：'+journeys[j].depart_time+'</div>'
+											+'<div class="time gray">航班信息：'+journeys[j].flight+pay_price+'</div>' 
+							}
+							var payHtml = '';
+							if(!orders[i].ispay){
+								payHtml = '<a class="pay_order" itemid="'+orders[i].id+'" href="javascrript:;">点击付款</a>'; 
+							}
+							var delHtml = '';
+							if(orders[i].isdeletetype){
+								delHtml = '<a class="del_order" itemid="'+orders[i].id+'" href="javascrript:;">删除订单</a>'; 
+							}
+							var supplementHtml = '';
+							if(orders[i].issupplementtype){
+								supplementHtml = '<a class="supplement_order" itemprice="'+orders[i].supplementprice+'" itemid="'+orders[i].id+'" href="javascrript:;">补差价</a>'; 
+							}
+							
+							html +='<li>'
+							  		+'<div class="top">'
+							  		+'<img src="images/fly.png" alt="" class="icon_img">'
+							  		+'<div class="right">'
+							  		+'<div class="right_top">'
+								  	+'<div class="list_top left">飞机票 '+tripHtml+payStateHtml+'</div>'
+								  	+'<div class="list_top"></div>'
+								  	+'<div class="list_top right"><i class="blank">全部金额</i></div>'
+							  		+'</div>'
+						           	+journeyHtml
+						 			+'</div>'
+							  		+'</div>'
+						    		+'<div class="btns">'
+						    		+ payHtml
+						    		+ delHtml
+						    		+ supplementHtml
+							  		+'<a href="javascrript:;">在线咨询</a>'
+							  		+refundHtml
+							  		+'</div>'
+							  		+'</li>';
+						}
+
+						$('.orderView .list ul').html(html); 
+					}else{ 
+						plus.nativeUI.closeWaiting()
+						mui.toast(data.msg);
+					}
+					
+				},
+				error:function(xhr,type,errorThrown){
+					plus.nativeUI.closeWaiting()
+					mui.toast('系统异常');
+				}
+			});		
+		}
+	</script>
+</html>

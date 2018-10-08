@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">我的账号</h1>
+		</header>
+		<div class="mui-content mui-login">
+			
+		    <div class="nav">
+				<ul>
+				  	<li class="on"><a href="javascript:;">账号密码登录</a></li>
+				  	<li><a href="javascript:;">快捷登录</a></li>
+				</ul>
+			</div>
+			<div class="mui-content">
+			<form id='login-form' class="mui-input-group">
+				<div class="mui-input-row">
+					
+					<input id='username' type="text" class="mui-input-clear mui-input" placeholder="请输入账号">
+				</div>
+				<div class="mui-input-row">
+					<input id='password' type="password" class="mui-input-clear mui-input" placeholder="请输入密码">
+				</div>
+			</form>
+			<form class="mui-input-group">
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-cell">
+						自动登录
+						<div id="autoLogin" class="mui-switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</li>
+				</ul>
+			</form>
+			<div class="mui-content-padded">
+				<button id='login' class="mui-btn mui-btn-block mui-btn-primary mui-login-btn">登录</button>
+				<div class="link-area">
+					<a id='reg' href="register.html">注册账号</a>
+					<span class="spliter">|</span> 
+					<a id='forgetPassword'>忘记密码</a>
+				</div>
+			</div>
+			<div class="mui-content-padded oauth-area">
+
+			</div>
+		</div>
+		
+		</div>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true,
+			})
+			mui.plusReady(function(){
+				var  self = ws=plus.webview.currentWebview();;
+				console.log(self.parent());
+				 document.getElementsByClassName('mui-login-btn')[0].addEventListener('tap',function(){
+				 	var username = document.getElementById('username').value;
+					var password = document.getElementById('password').value;
+					if(username == '' || password ==''){
+						mui.toast('请完整输入信息');
+						return;
+					}
+					plus.nativeUI.showWaiting('正在登录...');
+					mui.ajax('http://192.168.0.103/ctrip/userapi/getMemberUser',{
+						data:{
+							'username':username,
+							'password':password
+						},
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；              
+						success:function(data){
+							plus.nativeUI.closeWaiting();
+							if(data.state =='ok'){
+								mui.toast('登录成功');
+								mui.later(function(){
+									var json = {};
+									json.username = username ; 
+									json.password = password;
+									
+									var json_string = JSON.stringify(json)
+									plus.storage.setItem('userInfo',json_string);
+									var main = plus.webview.getWebviewById('my.html');
+									main.reload(true);
+									var order = plus.webview.getWebviewById('order.html');
+									order.reload(true);
+									
+									
+									mui.back();
+								},500)
+								
+							}else{
+								plus.nativeUI.closeWaiting();
+								mui.toast(data.msg);
+							}
+							
+						},
+						error:function(xhr,type,errorThrown){
+							mui.toast('系统异常');
+						}
+					});		
+				 })
+				
+				
+			})
+		</script>
+		
+	</body>
+
+</html>

@@ -1,0 +1,216 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		 <link rel="stylesheet" type="text/css" href="css/index.css"/>
+		<script src="js/mui.min.js"></script>
+		<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:false,
+			})
+			mui.plusReady(function(){
+				document.getElementsByClassName('flight')[0].addEventListener('tap',function(){
+					mui.openWindow({
+						url:'flight.html',
+						show:{
+							aniShow:'slide-in-bottom'
+							}
+						})
+				})
+				mui('.mui-index').on('tap','a',function(){
+					if(this.getAttribute('class') != 'flight'){
+						mui.toast('正在开发，敬请期待')
+					}
+					
+				})
+				
+				
+			})
+		</script>
+	</head>
+
+	<body>
+		<div class="mui-content mui-index">
+	     <header id="header">
+        <div class="h-search">
+            <input type="text" placeholder='搜索:目的地/酒店/景点/航班号'>
+            <i class="img"></i>
+        </div>
+        <div class="h-login">
+            <a href="">
+                <span class='img icon bSize'></span>
+                <span>我&nbsp;的</span>
+            </a>
+        </div>
+    </header>
+
+    <!--banner 部分-->
+    <div id="slider" class="mui-slider" >
+      <div class="mui-slider-group mui-slider-loop">
+        <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+        <div class="mui-slider-item mui-slider-item-duplicate">
+          <a href="#">
+            <img src="images/2.jpg">
+          </a>
+        </div>
+        <!-- 第一张 -->
+        <div class="mui-slider-item">
+          <a href="#">
+            <img src="images/1.jpg">
+          </a>
+        </div>
+        <!-- 第二张 -->
+        <div class="mui-slider-item">
+          <a href="#">
+            <img src="images/2.jpg">
+          </a>
+        </div>
+       
+        <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+        <div class="mui-slider-item mui-slider-item-duplicate">
+          <a href="#">
+            <img src="images/1.jpg">
+          </a>
+        </div>
+      </div>
+      <div class="mui-slider-indicator">
+        <div class="mui-indicator mui-active"></div>
+        <div class="mui-indicator"></div>
+        
+      </div>
+    </div>
+    <!--nav 部分-->
+    <nav id="nav">
+        <ul class="n-list">
+            <li class='n-l-img'>
+                <a href="">
+                    <span>酒 店</span>
+                    <i class='img icon'></i>
+                </a>
+            </li>
+            <li class='n-l-bb'><a href="">海外酒店</a></li>
+            <li class='n-l-bb'><a href="">团 购</a></li>
+            <li><a href="">特价酒店</a></li>
+            <li><a href="">民宿·客栈</a></li>
+        </ul>
+        <ul class="n-list">
+            <li class='n-l-img flight'>
+                <a class="flight">
+                    <span>机 票</span>
+                    <i class='img icon'></i>
+                </a>
+            </li>
+            <li class='n-l-bb'><a href="">火车票·抢票</a></li>
+            <li class='n-l-bb'><a href="">汽车票·船票</a></li>
+            <li><a href="">特价机票</a></li>
+            <li><a href="">专车·租车</a></li>
+        </ul>
+        <ul class="n-list">
+            <li class='n-l-img'>
+                <a href="">
+                    <span>旅 游</span>
+                    <i class='img icon'></i>
+                </a>
+            </li>
+            <li class='n-l-bb'><a href="">目的地攻略</a></li>
+            <li class='n-l-bb'><a href="">邮轮</a></li>
+            <li><a href="">周边游</a></li>
+            <li><a href="">定制·抱团</a></li>
+        </ul>
+        <ul class="n-list">
+            <li class='n-l-bb'><a href="">景点·玩乐</a></li>
+            <li class='n-l-bb'><a href="">美食</a></li>
+            <li class='n-l-bb'><a href="">全球购·换汇</a></li>
+            <li><a href="">礼品卡</a></li>
+            <li><a href="">出境WiFi</a></li>
+            <li><a href="">保险·签证</a></li>
+        </ul>
+    </nav>
+
+    <!--subNav部分-->
+    <nav id="subNav">
+        <ul>
+            <li>
+                <a href=""><i></i><span>自由行</span></a>
+                <a href=""><i></i><span>主题游</span></a>
+                <a href=""><i></i><span>一日游</span></a>
+                <a href="" class='last'><i></i><span>顶级游</span></a>
+            </li>
+            <li>
+                <a href=""><i></i><span>酒店+景点</span></a>
+                <a href=""><i></i><span>亲子·游学</span></a>
+                <a href=""><i></i><span>外部兑换</span></a>
+                <a href="" class='last'><i></i><span>加盟合作</span></a>
+            </li>
+            <li>
+                <a href=""><i></i><span>低价拼单</span></a>
+                <a href=""><i></i><span>机场停车</span></a>
+                <a href=""><i></i><span>旅游巴士</span></a>
+                <a href="" class='last'><i></i><span>更多服务</span></a>
+            </li>
+        </ul>
+    </nav>
+
+    <!--特卖汇部分-->
+    <section id="sale">
+        <h2>
+            <p></p>
+           
+        </h2>
+        <div class="s-main">
+            <ul class='mChild left'>
+                <a href=""><img src="images/1.png" width='100%' alt="" /></a>
+                <figcaption><a href="">巴厘岛6日4晚自由行·东航直飞 提前预售 赠VIP机场休息室</a></figcaption>
+                <p class='price'><a href="">￥<b>4622</b>起<span>省￥1377</span></a></p>
+                <p class='tip'><span>爆款</span><i></i></p> 
+            </ul>
+            <ul class='mChild right'>
+                <li>
+                    <a href="">
+                        <span class='s1'>千款特价</span>
+                        <span class='s2'>走过路过不要错过</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="">
+                        <span class='s1'>海外精选</span>
+                        <span class='s2'><font>百元</font>出境游</span>
+                        <i></i>
+                    </a>
+                    <a href="">
+                        <span class='s1'>周边玩乐</span>
+                        <span class='s2'><font>十元</font>度周末</span>
+                        <i></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!--热卖活动部分-->
+    <section id="hot">
+        <h2>
+            <p></p>
+           
+        </h2>
+        <ul>
+            <li>
+                <a href=""><img src="images/11.jpg" width='100%' alt="" /></a>
+                <a href=""><img src="images/14.png" width='100%' alt="" /></a>
+            </li>
+            <li>
+                <a href=""><img src="images/12.jpg" width='100%' alt="" /></a>
+                <a href=""><img src="images/13.jpg" width='100%' alt="" /></a>
+                <a href=""><img src="images/15.jpg" width='100%' alt="" /></a>
+            </li>
+        </ul>
+    </section>
+     </div>
+	</body>
+
+</html>

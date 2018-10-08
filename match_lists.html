@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript">
+			mui.init(
+//				{
+//				pullRefresh : {
+//				    container:".mui-match-lists",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+//				    down : {
+//					   
+//					    callback :function(){
+//					    	mui('.mui-match-lists').pullRefresh().endPulldownToRefresh();
+//					    } //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+//				    },
+//				   up : {
+//					   
+//					    callback :function(){
+//					    	mui('.mui-match-lists').pullRefresh().endPullupToRefresh();
+//					    } //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+//				    },
+//				 }
+//			}
+				)
+			mui.plusReady(function(){
+				var currentType = plus.networkinfo.getCurrentType();
+				
+				//获取导航以及全部数据
+				if( currentType==0){
+        			mui.toast('未知网络状态，请查看网络连接是否正常');
+        			return;
+            	}else if(currentType == 1){
+            		mui.toast('请开启网络状态');
+            		return;
+            	}else if(currentType != 3){
+            		mui.toast('正在使用蜂窝移动数据，请注意流量数据');
+            	}
+				mui.ajax('http://192.168.0.103/ctrip/eventapi/getTypeEvent',{
+						dataType:'json',//服务器返回json格式数据
+						type:'get',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；              
+						success:function(data){
+							 var types = data.types;
+							 var events = data.events;
+							 var typehtml = '<a class="mui-control-item mui-active" itemid="0" > 全部 </a>';
+							 var eventhtml = '';
+							 for(var i = 0 ; i < types.length ; i++){
+							 	typehtml +='<a class="mui-control-item" itemid="'+types[i].id+'"> '+types[i].name+' </a>';
+							 }
+							for(var j = 0 ; j< events.length ; j++){
+								eventhtml +='<li class="mui-table-view-cell mui-media">'
+						                    +'<a href="javascript:;">'
+						                    +'<img class="mui-media-object mui-pull-left" src="images/zt1.jpg">'
+						                    +'<div class="mui-media-body">'
+						                    +'<p class="mui-ellipsis-2 match-title">'+events[j].title+'</p>'
+						                    +'<p class="mui-ellipsis mui-match-bc">班期：'+events[j].schedule+'</p>'
+						                    +'<span class="match-score">'+events[j].score+'分</span><span>'+events[j].number+'出游</span><span class="match-price">￥'+events[j].price+'起</span>'
+						                    +'</div>'
+						                    +'</a>'
+						                +'</li>';
+							}
+							$('.types').append(typehtml);
+							$('.events').html(eventhtml);
+							
+						},
+						error:function(xhr,type,errorThrown){
+							mui.toast('系统异常');
+						}
+					});		
+				mui('.types').on('tap','a',function(){
+					var req = $(this).hasClass('mui-active');
+					var type = $(this).attr('itemid');
+					if(!req){
+						if( currentType==0){
+		        			mui.toast('未知网络状态，请查看网络连接是否正常');
+		        			return;
+		            	}else if(currentType == 1){
+		            		mui.toast('请开启网络状态');
+		            		return;
+		            	}else if(currentType != 3){
+		            		mui.toast('正在使用蜂窝移动数据，请注意流量数据');
+		            	}
+						plus.nativeUI.showWaiting('数据加载中...')
+						//获取导航以及全部数据
+					mui.ajax('http://192.168.0.103/ctrip/eventapi/getEvents',{
+							dataType:'json',//服务器返回json格式数据
+							type:'get',//HTTP请求类型
+							data : {'type':type},
+							timeout:10000,//超时时间设置为10秒；              
+							success:function(data){
+								 var eventhtml = '';
+								for(var j = 0 ; j< data.length ; j++){
+									eventhtml +='<li class="mui-table-view-cell mui-media">'
+							                    +'<a href="javascript:;">'
+							                    +'<img class="mui-media-object mui-pull-left" src="images/zt1.jpg">'
+							                    +'<div class="mui-media-body">'
+							                    +'<p class="mui-ellipsis-2 match-title">'+data[j].title+'</p>'
+							                    +'<p class="mui-ellipsis mui-match-bc">班期：'+data[j].schedule+'</p>'
+							                    +'<span class="match-score">'+data[j].score+'分</span><span>'+data[j].number+'出游</span><span class="match-price">￥'+data[j].price+'起</span>'
+							                    +'</div>'
+							                    +'</a>'
+							                +'</li>';
+								}
+								$('.events').html(eventhtml);
+								plus.nativeUI.closeWaiting(); 
+							},
+							error:function(xhr,type,errorThrown){
+								mui.toast('系统异常');
+							}
+						});		
+					}
+				})
+				mui('.mui-match-lists').on('tap','ul li',function(){
+					mui.toast('正在开发中，敬请期待');
+				})
+			})
+			mui.ready(function(){
+				
+			})
+			
+			
+		</script>
+	</head>
+
+	<body>
+		
+		<div class="mui-content mui-match" >
+			<div id="slider" class="mui-slider">
+				<div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+					<div class="mui-scroll types">
+						
+						
+					</div>
+				</div>
+            </div>
+            
+            
+            
+            <div class="mui-match-lists">
+	            <ul class="mui-table-view mui events">
+	                
+	            </ul>
+            </div>
+		</div>
+	</body>
+
+</html>

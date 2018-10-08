@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		
+	</head>
+
+	<body class="mui-crew-body">
+		<header class="mui-bar mui-bar-nav mui-crew">
+		    <a class="mui-action-back  mui-pull-left cancel">取消</a>
+		    <h1 class="mui-title">新增乘机人</h1>
+		    <a class="mui-pull-right complete">完成</a>
+		</header>
+		<div class="mui-content">
+		    <div class="crew-add-info">
+		    	<div class="info-div">
+		    		<span class="crew-info-left info-name">
+		    			姓名
+		    		</span>
+		    		<span class="crew-info-right"><input id="crew_name" type="text"  name="crew_name" placeholder="与乘机证件一致"></span>
+		    	</div>
+		    	<div class="info-div">
+		    		<span class="crew-info-left info-name">
+		    			证件类型
+		    		</span>
+		    		<span class="crew-info-right" id="papers">
+		    			<select name="crew_cardtype">
+		    				<option value="1">身份证</option>
+		    			</select>
+		    		</span>
+		    	</div>
+		    	<div class="info-div">
+		    		<span class="crew-info-left info-name">证件号码</span>
+		    		<span class="crew-info-right"><input oninput="if(value.length>18) value=value.slice(0,18)"  type="number" id="crew_cardID" name="crew_cardID" placeholder="请输入证件号"></span>
+		    	</div>
+		    	<!--<div class="info-div">
+		    		<span class="crew-info-left info-name">境内手机</span>
+		    		<span class="crew-info-right"><input maxlength="11" type="tel" id="crew_phone" name="crew_phone" placeholder="选填 ， 用于接收航变信息"></span>
+		    	</div>-->
+		    </div>
+		    
+		</div>
+	</body>
+	<script type="text/javascript">
+		mui.init()
+		var name_shenfen_index = -1;
+		mui.plusReady(function(){
+			var self = plus.webview.currentWebview();
+			var crew_name = self.crew_name;
+			var crew_cardID = self.crew_cardID;
+			if(self.index != undefined){
+				name_shenfen_index = self.index;
+			}
+			if(crew_name != undefined){
+				document.getElementById('crew_name').value = crew_name;
+			}
+			if(crew_cardID != undefined){
+				document.getElementById('crew_cardID').value = crew_cardID;
+			}
+			
+			document.getElementsByClassName('complete')[0].addEventListener('tap',function(){
+				var crew_name = document.getElementById('crew_name').value;
+				var crew_cardID = document.getElementById('crew_cardID').value;
+//				var crew_phone = document.getElementById('crew_phone').value;
+				var namereg =  /^([a-zA-Z\u4e00-\u9fa5\·]{1,10})$/;
+				var cardIDreg =  /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;  
+//				var phonereg =/^[1][3,4,5,7,8][0-9]{9}$/;
+				if(crew_name==''){
+					mui.toast('请填写姓名');
+					return;
+				}
+				if(crew_cardID==''){
+					mui.toast('请填写身份证');
+					return;
+				}
+//				if(crew_phone==''){
+//					mui.toast('请填写手机号码');
+//					return;
+//				}
+				
+//				if(!namereg.test(crew_name)){
+//					mui.toast('姓名格式不正确');
+//					return;
+//				}
+//				if(!cardIDreg.test(crew_cardID)){
+//					mui.toast('身份证格式不正确');
+//					return;
+//				}
+//				if(!phonereg.test(crew_phone)){
+//					mui.toast('手机号码格式不正确');
+//					return;
+//				} 
+				
+				var main=plus.webview.getWebviewById("reserve.html");
+				mui.fire(main,'addPassenger',{crew_name:crew_name,crew_cardID:crew_cardID, name_shenfen_index:name_shenfen_index});
+				mui.back();
+			})
+		})
+	</script>
+
+</html>

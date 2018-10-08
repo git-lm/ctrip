@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class=" mui-icon mui-icon-camera mui-pull-left"></a>
+		    <h1 class="mui-title">我的</h1>
+		    <a class="mui-icon mui-icon-contact mui-pull-right " id="mui-my-info"></a>
+		</header>
+		
+		<div class="mui-content">
+			<ul class="mui-table-view mui-grid-view mui-grid-9 mui-my-header">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				    <a id="flightAll">
+				        <span class="mui-icon mui-icon-home"></span>
+				        <div class="mui-media-body">全部订单</div>
+				    </a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				    <a id="flightPay">
+				        <span class="mui-icon mui-icon-email"></span>
+				        <div class="mui-media-body">待付款</div>
+				    </a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				    <a id="flightRefund">
+				        <span class="mui-icon mui-icon-chatbubble"></span>
+				        <div class="mui-media-body">未出行</div>
+				    </a>
+				</li>
+			
+			</ul>
+			<ul class="mui-table-view mui-grid-view mui-grid-9 mui-my-yh">
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				    <a href="#">
+				        <span class="mui-icon mui-icon-home"></span>
+				        <div class="mui-media-body">
+				        	红包
+				        </div>
+				    </a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				    <a href="#">
+				        <span class="mui-icon mui-icon-email"><span class="mui-badge mui-badge-red">5</span></span>
+				        <div class="mui-media-body">优惠券</div>
+				    </a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				    <a href="#">
+				        <span class="mui-icon mui-icon-chatbubble"></span>
+				        <div class="mui-media-body">银行卡</div>
+				    </a>
+				</li>
+				
+			</ul>
+			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+				    <a href="#">
+				        <span class="mui-icon mui-icon-home"></span>
+				        <div class="mui-media-body">常用信息</div>
+				    </a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+				    <a href="#">
+				        <span class="mui-icon mui-icon-email"><span class="mui-badge mui-badge-red">5</span></span>
+				        <div class="mui-media-body">帮助与反馈</div>
+				    </a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3">
+				    <a href="#">
+				        <span class="mui-icon mui-icon-chatbubble"></span>
+				        <div class="mui-media-body">邀请好友</div>
+				    </a>
+				</li>
+				<li class="mui-table-view-cell mui-media mui-col-xs-3 mui-col-sm-3" id="mui-my-setting">
+				    <a href="#">
+				        <span class="mui-icon mui-icon-location"></span>
+				        <div class="mui-media-body">设置</div>
+				    </a>
+				</li>
+			
+			</ul>
+		</div>
+	</body>
+	<script type="text/javascript">
+		mui.init({
+			
+			preloadPages:[{
+				url : 'grzl.html',
+				id	:'grzx.html'
+			},{
+				url	:'setting.html',
+				id	:'setting.html'
+			},{
+				url	:'login.html',
+				id	:'login.html'
+			}]
+		})
+		mui.plusReady(function(){
+			document.getElementById('mui-my-info').addEventListener('tap',function(){
+				var userinfo = plus.storage.getItem('userInfo');
+				if(userinfo == null){
+					mui.openWindow('login.html')
+				}else{
+					mui.openWindow('grzl.html')
+				}
+				
+			})
+			
+			document.getElementById('mui-my-setting').addEventListener('tap',function(){
+				var userinfo = plus.storage.getItem('userInfo');
+				if(userinfo == null){
+					mui.openWindow('login.html')
+				}else{
+					mui.openWindow('setting.html') 
+				}
+			})
+			
+			document.getElementById('flightAll').addEventListener('tap',function(){
+				var userinfo = plus.storage.getItem('userInfo');
+				if(userinfo == null){
+					mui.openWindow('login.html')
+				}else{
+					mui.openWindow({
+						url	:'order.html',
+						createNew	:true
+					})
+				}
+				
+			})
+			document.getElementById('flightPay').addEventListener('tap',function(){
+				var userinfo = plus.storage.getItem('userInfo');
+				if(userinfo == null){
+					mui.openWindow('login.html')
+				}else{
+					mui.openWindow({
+						url	:'order.html',
+						createNew	:true
+					})
+				}
+				
+			})
+			document.getElementById('flightRefund').addEventListener('tap',function(){
+				var userinfo = plus.storage.getItem('userInfo');
+				if(userinfo == null){
+					mui.openWindow('login.html')
+				}else{
+					mui.openWindow({
+						url	:'order.html',
+						createNew	:true
+					})
+				}
+				
+			})
+		})
+	</script>
+</html>

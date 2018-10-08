@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		
+	</head>
+
+	<body>
+		
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title reserve_title"></h1>
+		    <a class="mui-action-back mui-icon mui-icon-chatbubble mui-pull-right"></a>
+		</header>
+		<div class="mui-content">
+		    <div class="topDefault">
+				<div>
+					<span><i class="triptype">单程</i>
+						<b class="triptime">08-02 周四 07:20</b>
+					</span>
+					<span>成人</span>
+				</div>
+				<div>
+					<img src="images/arr_r_blue.png">
+				</div>
+			</div>
+			<div class="remindTxt">
+				<p>预计支付成功后20分钟内出票，保障出行。</p>
+				<p><img src="images/lightning.png">仅需三分钟可轻松下单</p>
+			</div>
+			<div class="choiceBtn">
+				<div>
+					<span>请添加乘机人</span> 已选择：乘机人<i class="pnumber">0</i>人 
+				</div>
+				<div class="name_ince">
+					
+					
+					<span class="increaseChoice">新增</span>
+				</div>
+				<form id="reserve">
+					<div class="showpassenger">
+						
+					</div>
+					
+					
+					<div class="selectDiv">
+						<select>
+							<option>境内手机</option>
+						</select>
+						<span><input id="phone" name="tel" maxlength="11" type="tel"></span>
+						<img src="images/defauil_2.png">
+					</div>
+				</form>
+			</div>
+			<!--<div class="name_shenfen name_interests">
+					<div class="name_shenfen1">
+						<img src="images/defauil_4.png">
+					</div>
+					<div class="name_shenfen2">
+						<div><img src="images/defauil_7.png">享受多项权益及服务<img src="images/defauil_3.png"><span>￥88/半年</span></div>
+						<div>出票时会加上相应价格</div>
+					</div>
+			</div>
+			<div class="name_shenfen name_interests">
+					<div class="name_shenfen1">
+						<img src="images/defauil_4.png">
+					</div>
+					<div class="name_shenfen2 name_shenfen22">
+						<div>尊享航意险<img src="images/defauil_3.png"><span>￥40/人</span></div>
+						<div>出票时会加上相应价格</div>
+					</div>
+			</div>-->
+			<div class="footerDefacult">
+				<div>
+					<!--<span class="footerDefacult_zj">所需资金</span>
+					<span>￥100</span>-->
+				</div>
+				<div>
+					<!--<span>明细<img src="images/defauil_5.png"></span>-->
+					<a href="javascript:void(0);" class="reserve_next">下一步</a>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+			mui.init({
+				swipeBack:true,
+			})
+			var  fromAddress , toAddress , fromAddressName , toAddressName , gotime , backtime , triptype; 
+			mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+				fromAddress = self.fromAddress;
+				toAddress = self.toAddress;
+				fromAddressName = self.fromAddressName;
+				toAddressName = self.toAddressName;
+				gotime = self.gotime.replace(',','');
+				backtime = self.backtime.replace(',',''); 
+				triptype = self.triptype;
+				
+//				var pnumber = self.pnumber;
+//				mui.ajax('http://192.168.0.103/ctrip/provinceapi/getProvince',{
+//						data:{
+//							'fromAddress':fromAddress, 
+//							'toAddress':toAddress
+//						},
+//						dataType:'json',//服务器返回json格式数据
+//						type:'post',//HTTP请求类型
+//						timeout:10000,//超时时间设置为10秒；              
+//						success:function(data){
+//							if(data.state =='ok'){
+//								document.getElementsByClassName('reserve_title')[0].innerHTML = data.fromAddressName +'->' + data.toAddressName;
+//							}else{
+//								mui.toast('请正确选择城市');
+//								mui.back();
+//							}
+//								
+//						},
+//						error:function(xhr,type,errorThrown){
+//							mui.toast('系统异常,请重新选择城市');
+//							mui.back();
+//						}
+//					});	
+				
+				if(triptype == 1 ){
+					//说明是单程
+					document.getElementsByClassName('triptype')[0].innerHTML ='单程';
+					document.getElementsByClassName('triptime')[0].innerHTML ='出发时间'+gotime; 
+					document.getElementsByClassName('reserve_title')[0].innerHTML = fromAddressName +'->' + toAddressName;
+				}else{
+					//说明是往返
+					document.getElementsByClassName('triptype')[0].innerHTML ='往返';
+					document.getElementsByClassName('triptime')[0].innerHTML ='出发时间'+gotime+'返回时间'+backtime;
+					document.getElementsByClassName('reserve_title')[0].innerHTML = fromAddressName +'<->' + toAddressName;
+				}
+			
+				
+				document.getElementsByClassName('reserve_next')[0].addEventListener('tap',function(){
+					var size = $('.passenger').size();
+					var tel  = $('#phone').val();
+					var phonereg =/^[1][3,4,5,7,8][0-9]{9}$/;
+					if(size == 0){
+						mui.toast('请添加乘机人');
+						return;
+					}
+					if($.trim(tel) ==''){
+						mui.toast('请填写联系电话');
+						return;
+					}
+					if(!phonereg.test(tel)){
+						mui.toast('手机号码格式不正确');
+						return;
+					} 
+					
+					var from_data = $('#reserve').serialize();
+					from_data = from_data+'&fromAddress='+fromAddress+'&toAddress='+toAddress+'&gotime='+gotime+'&backtime='+backtime+'&triptype='+triptype
+					plus.storage.setItem('order',from_data);
+					mui.openWindow({
+						url	:	'payment.html',
+						id	:	'payment.html',
+						extras:{
+							triptype : triptype
+						}
+					})
+				})
+				document.getElementsByClassName('increaseChoice')[0].addEventListener('tap',function(){
+					mui.openWindow({
+						url	:	'crew.html',
+						id	:	'crew.html',
+					})
+				})
+				mui('.showpassenger').on('tap','.name_shenfen',function(){
+					var crew_name = $(this).find('.crew_name').val();
+					var crew_cardID = $(this).find('.crew_cardID').val();
+					var index = $(this).index();
+            			mui.openWindow({
+							url	:	'crew.html',
+							id	:	'crew.html',
+							extras :{
+	            				crew_name		:crew_name,
+	            				crew_cardID		:crew_cardID,
+	            				index			:index
+	            			}
+						})
+            	})
+			})
+			window.addEventListener("addPassenger", function(e) {
+				var crew_name = e.detail.crew_name;
+				var crew_cardID = e.detail.crew_cardID;
+				var crew_phone = e.detail.crew_phone;
+				var name_shenfen_index = e.detail.name_shenfen_index;
+				if(name_shenfen_index == -1){
+					$('.name_ince').prepend('<span class="oneChoice">'+crew_name+'</span>')
+					var html = '<div class="name_shenfen passenger">'
+							+'<div class="name_shenfen1">'
+							+'<img src="images/defauil_2.png">'
+							+'</div>'
+							+'<div class="name_shenfen2">'
+							+'<span class="crew_name_span">'+crew_name+'</span>'
+							+'<input class="crew_name" name="name[]" value="'+crew_name+'" type="hidden" />'
+							+'<span class="crew_cardID_span">身份证 '+crew_cardID+'</span>'
+							+'<input class="crew_cardID" name="cardID[]" value="'+crew_cardID+'" type="hidden" />'
+							+'</div>'
+							+'<div class="name_shenfen3">'
+							+'<img  src="images/defauil_1.png">'
+							+'</div>'
+							+'</div>'
+					$('.showpassenger').prepend(html);
+				}else{
+					$('.name_shenfen').eq(name_shenfen_index).find('.crew_name_span').text(crew_name);
+					$('.name_shenfen').eq(name_shenfen_index).find('.crew_cardID_span').text(crew_cardID);
+					$('.name_shenfen').eq(name_shenfen_index).find('.crew_name').val(crew_name);
+					$('.name_shenfen').eq(name_shenfen_index).find('.crew_cardID').val(crew_cardID);
+					$('.oneChoice').eq(name_shenfen_index).text(crew_name);
+				}
+				$('.pnumber').text($('.showpassenger .name_shenfen').length);
+					
+            });
+		</script>
+</html>

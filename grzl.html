@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">个人资料</h1>
+		</header>
+		<div class="mui-content" id="grzl">
+		    <ul class="mui-table-view">
+		            <li class="mui-table-view-cell mui-grzl-tx">
+		                <a class="mui-navigate-right">
+		                	  <span class="mui-badge ">1</span>
+		                    头像
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right" rel="nickname.html">
+		                	  <span class="mui-badge mui-badge-warning" id="nickname-span">这是您的昵称</span>
+		                    昵称
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right" >
+		                	  <span class="mui-badge mui-badge-warning">这是您的姓名</span>
+		                     姓名
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	  <span class="mui-badge mui-badge-warning">男</span>
+		                    性别
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+		                	  <span class="mui-badge mui-badge-warning">也许生日获取惊喜</span>
+		                   	出生日期
+		                </a>
+		            </li>
+		            <li class="mui-table-view-cell">
+		                <a class="mui-navigate-right">
+	                		  <span class="mui-badge mui-badge-warning">还没有填写哦</span>
+                     		常住地
+		                </a>
+		            </li>
+		        </ul>
+		       
+		</div>
+	</body>
+	<script type="text/javascript">
+		mui.init({
+			swipeBack:true,
+		})
+		mui.plusReady(function(){
+			var nickname = plus.storage.getItem('nickname');
+			if(nickname != null && nickname != ''){
+				document.getElementById('nickname-span').innerHTML = nickname;
+			}
+			
+			
+			mui('#grzl').on('tap','a',function(){
+				var rel = this.getAttribute('rel')
+				if(rel != undefined || rel != ''){
+					mui.openWindow(rel)
+				}
+			})
+		})
+		window.addEventListener('changeNickname',function(e){
+				document.getElementById('nickname-span').innerHTML = e.detail.nickname
+		})
+	</script>
+</html>
