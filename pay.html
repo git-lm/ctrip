@@ -43,6 +43,7 @@
 						type:'post',//HTTP请求类型
 						timeout:10000,//超时时间设置为10秒；              
 						success:function(data){
+							plus.nativeUI.closeWaiting();
 							console.log(JSON.stringify(data));
 							if(data.state =='nologin'){
 								mui.openWindow('login.html')

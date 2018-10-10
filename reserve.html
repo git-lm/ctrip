@@ -93,16 +93,35 @@
 			mui.init({
 				swipeBack:true,
 			})
-			var  fromAddress , toAddress , fromAddressName , toAddressName , gotime , backtime , triptype; 
+			var type ,  fromAddress , toAddress , fromAddressName , toAddressName , gotime , backtime , triptype; 
 			mui.plusReady(function(){
 				var self = plus.webview.currentWebview();
+				type = self.type;
 				fromAddress = self.fromAddress;
 				toAddress = self.toAddress;
 				fromAddressName = self.fromAddressName;
 				toAddressName = self.toAddressName;
 				gotime = self.gotime.replace(',','');
-				backtime = self.backtime.replace(',',''); 
+				backtime = self.backtime.replace(',','');  
 				triptype = self.triptype;
+				if(self.mid == undefined){
+					mid = 0;
+				}else{
+					mid = self.mid;
+				}
+				if(triptype == 1 ){
+					//说明是单程
+					document.getElementsByClassName('triptype')[0].innerHTML ='单程';
+					document.getElementsByClassName('triptime')[0].innerHTML ='出发时间'+gotime; 
+					document.getElementsByClassName('reserve_title')[0].innerHTML = fromAddressName +'->' + toAddressName;
+				}else{
+					//说明是往返
+					document.getElementsByClassName('triptype')[0].innerHTML ='往返';
+					document.getElementsByClassName('triptime')[0].innerHTML ='出发时间'+gotime+'返回时间'+backtime;
+					document.getElementsByClassName('reserve_title')[0].innerHTML = fromAddressName +'<->' + toAddressName;
+				}
+				
+				
 				
 //				var pnumber = self.pnumber;
 //				mui.ajax('http://192.168.0.103/ctrip/provinceapi/getProvince',{
@@ -128,17 +147,7 @@
 //						}
 //					});	
 				
-				if(triptype == 1 ){
-					//说明是单程
-					document.getElementsByClassName('triptype')[0].innerHTML ='单程';
-					document.getElementsByClassName('triptime')[0].innerHTML ='出发时间'+gotime; 
-					document.getElementsByClassName('reserve_title')[0].innerHTML = fromAddressName +'->' + toAddressName;
-				}else{
-					//说明是往返
-					document.getElementsByClassName('triptype')[0].innerHTML ='往返';
-					document.getElementsByClassName('triptime')[0].innerHTML ='出发时间'+gotime+'返回时间'+backtime;
-					document.getElementsByClassName('reserve_title')[0].innerHTML = fromAddressName +'<->' + toAddressName;
-				}
+				
 			
 				
 				document.getElementsByClassName('reserve_next')[0].addEventListener('tap',function(){
@@ -159,7 +168,7 @@
 					} 
 					
 					var from_data = $('#reserve').serialize();
-					from_data = from_data+'&fromAddress='+fromAddress+'&toAddress='+toAddress+'&gotime='+gotime+'&backtime='+backtime+'&triptype='+triptype
+					from_data = from_data+'&fromAddress='+fromAddress+'&toAddress='+toAddress+'&gotime='+gotime+'&backtime='+backtime+'&triptype='+triptype+'&type='+type+'&mid='+mid
 					plus.storage.setItem('order',from_data);
 					mui.openWindow({
 						url	:	'payment.html',

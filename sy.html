@@ -22,8 +22,17 @@
 							}
 						})
 				})
+				document.getElementsByClassName('visa')[0].addEventListener('tap',function(){
+					mui.openWindow({
+						url:'visa.html',
+						show:{
+							aniShow:'slide-in-bottom'
+							}
+						})
+				})
 				mui('.mui-index').on('tap','a',function(){
-					if(this.getAttribute('class') != 'flight'){
+					if(this.getAttribute('class') != 'flight' && this.getAttribute('class') != 'visa'){
+						
 						mui.toast('正在开发，敬请期待')
 					}
 					
@@ -128,7 +137,7 @@
             <li class='n-l-bb'><a href="">全球购·换汇</a></li>
             <li><a href="">礼品卡</a></li>
             <li><a href="">出境WiFi</a></li>
-            <li><a href="">保险·签证</a></li>
+            <li><a class="visa">保险·签证</a></li>
         </ul>
     </nav>
 

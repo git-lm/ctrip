@@ -108,6 +108,7 @@
 							
 						},
 						error:function(xhr,type,errorThrown){
+							plus.nativeUI.closeWaiting();
 							mui.toast('系统异常');
 						}
 					});		

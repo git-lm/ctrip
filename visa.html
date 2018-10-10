@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script src="js/mui.min.js"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style>
+		.mui-table-view li{
+			padding: 10px 3px !important;
+		}
+		.mui-table-view-cell a{
+			height:100px;
+			background-size: 100% 100%;
+		}
+		.mui-table-view-cell div{
+			color: #FFFFFF !important;
+		}
+	</style>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">签证办理</h1>
+		</header>
+		<div class="mui-content">
+		    <div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+			    <div class="mui-scroll types">
+			        
+			    </div>
+			</div>
+			<ul class="mui-table-view mui-grid-view mui-grid-9">
+				
+				
+			</ul>
+			
+		</div>
+	</body>
+	<script>
+		mui.plusReady(function(){
+			getVisaType();
+			mui('.types').on('tap','a',function(){
+				getVisa();
+			})
+			mui('.mui-table-view').on('tap','li',function(){
+				var id = this.getAttribute("itemid");
+				plus.nativeUI.confirm('确定下载',function(){
+					mui.ajax('http://192.168.0.103/ctrip/visaapi/getVisaById',{
+						data:{'id':id},
+						dataType:'json',//服务器返回json格式数据
+						type:'post',//HTTP请求类型
+						timeout:10000,//超时时间设置为10秒；              
+						success:function(data){
+							console.log(data.file_url);
+							
+							plus.io.requestFileSystem( plus.io.PUBLIC_DOWNLOADS, function(fs){
+			// fs.root是根目录操作对象DirectoryEntry
+			// 创建读取目录信息对象 
+			var directoryReader = fs.root.createReader();
+			directoryReader.readEntries( function( entries ){
+				var i;
+				for( i=0; i < entries.length; i++ ) {
+					alert( entries[i].name );
+				}
+			}, function ( e ) {
+				alert( "Read entries failed: " + e.message );
+			} );
+	} );
+													
+							return;
+							if(data.file_url != undefined || data.file_url != ''){
+								createDownload(data.file_url , file_name);
+							}else{
+								mui.toast('暂无下载文件');
+							}
+							
+						},
+						error:function(xhr,type,errorThrown){
+							
+							mui.toast('系统异常');
+						}
+					});
+				})
+				
+			})
+		})
+		function getVisa(){
+			plus.nativeUI.showWaiting('正在加载...');
+			var type = $('.mui-active').attr('itemid');
+			mui.ajax('http://192.168.0.103/ctrip/visaapi/getVisa',{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；              
+				success:function(data){
+					plus.nativeUI.closeWaiting();
+					var visaHtml = '';
+					for(var i = 0 ; i<data.length ; i++){
+						visaHtml +='<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" itemid="'+data[i].id+'">'
+								    +'<a href="#" style="background-image: url('+data[i].photo_url+');">'
+								    +'<div class="mui-media-body">'+data[i].name+'</div>'
+								    +'</a>'
+									+'</li>';
+					}
+					$('.mui-table-view').html(visaHtml);
+				},
+				error:function(xhr,type,errorThrown){
+					plus.nativeUI.closeWaiting();
+					mui.toast('系统异常');
+				}
+			});
+		}
+		function getVisaType(){
+			plus.nativeUI.showWaiting('正在加载...');
+			mui.ajax('http://192.168.0.103/ctrip/visaapi/getVisaType',{
+				dataType:'json',//服务器返回json格式数据
+				type:'post',//HTTP请求类型
+				timeout:10000,//超时时间设置为10秒；              
+				success:function(data){
+					plus.nativeUI.closeWaiting();
+					var typeHtml = '<a class="mui-control-item mui-active" itemid="0"> 推荐 </a>';
+					for(var i = 0 ; i<data.length ; i++){
+						typeHtml +='<a class="mui-control-item" itemid="'+data[i].id+'"> '+data[i].name+' </a>';
+					}
+					$('.types').html(typeHtml);
+					getVisa();
+				},
+				error:function(xhr,type,errorThrown){
+					plus.nativeUI.closeWaiting();
+					mui.toast('系统异常');
+				}
+			});		
+		}
+		function createDownload(file_url   , file_name ){
+			var dtask = plus.downloader.createDownload(file_url, {filename:'_downloads/'+file_name}, function ( d, status ) {
+						// 下载完成
+						if ( status == 200 ) { 
+							console.log( "Download success: " + d.filename );
+						} else {
+							 console.log( "Download failed: " + status ); 
+						}  
+					});
+					dtask.start();
+		}
+	</script>
+</html>
