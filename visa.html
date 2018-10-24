@@ -48,50 +48,37 @@
 			})
 			mui('.mui-table-view').on('tap','li',function(){
 				var id = this.getAttribute("itemid");
-				plus.nativeUI.confirm('确定下载',function(){
-					mui.ajax('http://192.168.0.103/ctrip/visaapi/getVisaById',{
-						data:{'id':id},
-						dataType:'json',//服务器返回json格式数据
-						type:'post',//HTTP请求类型
-						timeout:10000,//超时时间设置为10秒；              
-						success:function(data){
-							console.log(data.file_url);
-							
-							plus.io.requestFileSystem( plus.io.PUBLIC_DOWNLOADS, function(fs){
-			// fs.root是根目录操作对象DirectoryEntry
-			// 创建读取目录信息对象 
-			var directoryReader = fs.root.createReader();
-			directoryReader.readEntries( function( entries ){
-				var i;
-				for( i=0; i < entries.length; i++ ) {
-					alert( entries[i].name );
-				}
-			}, function ( e ) {
-				alert( "Read entries failed: " + e.message );
-			} );
-	} );
-													
-							return;
-							if(data.file_url != undefined || data.file_url != ''){
-								createDownload(data.file_url , file_name);
-							}else{
-								mui.toast('暂无下载文件');
-							}
-							
-						},
-						error:function(xhr,type,errorThrown){
-							
-							mui.toast('系统异常');
+				var userInfo = plus.storage.getItem('userInfo');
+				if(userInfo == '' || userInfo == undefined){
+					mui.toast('请先登录');
+					mui.openWindow({
+						url	:	'login.html',
+						id	:	'login.html',
+					})
+				}else{
+					plus.nativeUI.confirm( "确认申请签证？", function(e){
+						if(e.index == 0){
+							mui.openWindow({
+								url :'visa_apply.html' , 
+								id	:'visa_apply.html',
+								extras	:{
+									vid	:id
+								}
+							})
 						}
 					});
-				})
+					
+
+				}
+								
+				
 				
 			})
 		})
 		function getVisa(){
 			plus.nativeUI.showWaiting('正在加载...');
 			var type = $('.mui-active').attr('itemid');
-			mui.ajax('http://192.168.0.103/ctrip/visaapi/getVisa',{
+			mui.ajax('http://139.196.85.135:8016/visaapi/getVisa',{
 				dataType:'json',//服务器返回json格式数据
 				type:'post',//HTTP请求类型
 				timeout:10000,//超时时间设置为10秒；              
@@ -115,7 +102,7 @@
 		}
 		function getVisaType(){
 			plus.nativeUI.showWaiting('正在加载...');
-			mui.ajax('http://192.168.0.103/ctrip/visaapi/getVisaType',{
+			mui.ajax('http://139.196.85.135:8016/visaapi/getVisaType',{
 				dataType:'json',//服务器返回json格式数据
 				type:'post',//HTTP请求类型
 				timeout:10000,//超时时间设置为10秒；              
@@ -134,16 +121,6 @@
 				}
 			});		
 		}
-		function createDownload(file_url   , file_name ){
-			var dtask = plus.downloader.createDownload(file_url, {filename:'_downloads/'+file_name}, function ( d, status ) {
-						// 下载完成
-						if ( status == 200 ) { 
-							console.log( "Download success: " + d.filename );
-						} else {
-							 console.log( "Download failed: " + status ); 
-						}  
-					});
-					dtask.start();
-		}
+		
 	</script>
 </html>

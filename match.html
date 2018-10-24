@@ -97,7 +97,7 @@
 		//获取赛事类型
 		function getEventTypes(){
 			plus.nativeUI.showWaiting('数据加载中...')
-			mui.ajax('http://192.168.0.103/ctrip/eventapi/getEventTypes',{ 
+			mui.ajax('http://139.196.85.135:8016/eventapi/getEventTypes',{ 
 				dataType:'json',//服务器返回json格式数据
 				type:'get',//HTTP请求类型
 				timeout:10000,//超时时间设置为10秒；              
@@ -120,7 +120,7 @@
 		//获取所有赛事信息
 		function getEvents(type){
 			plus.nativeUI.showWaiting('数据加载中...')
-			mui.ajax('http://192.168.0.103/ctrip/eventapi/getEvents',{
+			mui.ajax('http://139.196.85.135:8016/eventapi/getEvents',{
 				dataType:'json',//服务器返回json格式数据
 				type:'post',//HTTP请求类型
 				data : {'type':type},

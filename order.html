@@ -60,7 +60,7 @@
 				mui.confirm('确认删除吗？','删除订单',['取消','确认'],function(e){
 					if(e.index == 1){
 						plus.nativeUI.showWaiting('正在删除...');
-						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderDel',{ 
+						mui.ajax('http://139.196.85.135:8016/ticketapi/ticketOrderDel',{ 
 							data:{
 								'oid':oid,
 								'userInfo':userInfo
@@ -99,7 +99,7 @@
 				mui.confirm('确认支付吗？','支付订单',['取消','确认'],function(e){
 					if(e.index == 1){
 						plus.nativeUI.showWaiting('正在支付...');
-						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderPay',{ 
+						mui.ajax('http://139.196.85.135:8016/ticketapi/ticketOrderPay',{ 
 							data:{
 								'oid':oid,
 								'userInfo':userInfo
@@ -139,7 +139,7 @@
 				mui.confirm('确认补差价'+supplement_price+'元吗？','确认补差价',['取消','确认'],function(e){
 					if(e.index == 1){
 						plus.nativeUI.showWaiting('正在支付...');
-						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderSupplement',{ 
+						mui.ajax('http://139.196.85.135:8016/ticketapi/ticketOrderSupplement',{ 
 							data:{
 								'oid':oid,
 								'userInfo':userInfo
@@ -179,7 +179,7 @@
 				mui.confirm('确认要申请退款吗？','申请退款',['取消','确认'],function(e){
 					if(e.index == 1){
 						plus.nativeUI.showWaiting('申请中...');
-						mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderRefund',{ 
+						mui.ajax('http://139.196.85.135:8016/ticketapi/ticketOrderRefund',{ 
 							data:{
 								'oid':oid,
 								'userInfo':userInfo
@@ -231,7 +231,7 @@
 			var ordertype = $('.on').attr('itemtype')
 			var userInfo = plus.storage.getItem('userInfo');
 			plus.nativeUI.showWaiting('正在加载...')
-			mui.ajax('http://192.168.0.103/ctrip/ticketapi/getMemberTickets',{
+			mui.ajax('http://139.196.85.135:8016/ticketapi/getMemberTickets',{
 				
 				data:{
 					'userInfo':userInfo,
@@ -282,7 +282,6 @@
 								}
 							
 							
-							console.log(orders[i].pay_state)
 							if(orders[i].pay_state == 1){
 								payStateHtml = '<span class="number">直接购买</span>';
 							}else{
@@ -343,7 +342,7 @@
 							  		+'</div>'
 							  		+'</li>';
 						}
-
+						console.log(html)
 						$('.orderView .list ul').html(html); 
 					}else{ 
 						plus.nativeUI.closeWaiting()

@@ -67,7 +67,7 @@
 					mui.confirm('确认删除吗？','删除订单',['取消','确认'],function(e){
 						if(e.index == 1){
 							plus.nativeUI.showWaiting('正在删除...');
-							mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketOrderDel',{ 
+							mui.ajax('http://139.196.85.135:8016/ticketapi/ticketOrderDel',{ 
 								data:{
 									'oid':oid,
 									'userInfo':userInfo
@@ -107,7 +107,7 @@
 			function  getOrders(type){
 				var userInfo = plus.storage.getItem('userInfo');
 				
-				mui.ajax('http://192.168.0.103/ctrip/ticketapi/getMemberTickets',{ 
+				mui.ajax('http://139.196.85.135:8016/ticketapi/getMemberTickets',{ 
 					data:{
 						'userInfo':userInfo,
 						'type':type

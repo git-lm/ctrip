@@ -115,7 +115,7 @@
 					var payInfo = plus.storage.getItem('order');
 					payInfo +='&budget='+budget+'&pay_state=2&goflight='+goflight+'&backflight='+backflight+'&source=1&paytype=0';
 					plus.nativeUI.showWaiting('正在提交...');
-					mui.ajax('http://192.168.0.103/ctrip/ticketapi/ticketPay',{
+					mui.ajax('http://139.196.85.135:8016/ticketapi/ticketPay',{
 						data:{
 							'payInfo':payInfo,
 							'userInfo' :userInfo

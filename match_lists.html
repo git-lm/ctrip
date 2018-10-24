@@ -42,7 +42,7 @@
             	}else if(currentType != 3){
             		mui.toast('正在使用蜂窝移动数据，请注意流量数据');
             	}
-				mui.ajax('http://192.168.0.103/ctrip/eventapi/getTypeEvent',{
+				mui.ajax('http://139.196.85.135:8016/eventapi/getTypeEvent',{
 						dataType:'json',//服务器返回json格式数据
 						type:'get',//HTTP请求类型
 						timeout:10000,//超时时间设置为10秒；              
@@ -89,7 +89,7 @@
 		            	}
 						plus.nativeUI.showWaiting('数据加载中...')
 						//获取导航以及全部数据
-					mui.ajax('http://192.168.0.103/ctrip/eventapi/getEvents',{
+					mui.ajax('http://139.196.85.135:8016/eventapi/getEvents',{
 							dataType:'json',//服务器返回json格式数据
 							type:'get',//HTTP请求类型
 							data : {'type':type},
