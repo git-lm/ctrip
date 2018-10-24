@@ -11,7 +11,28 @@
 		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 		
 	</head>
-	
+	<style type="text/css">
+		
+			#popover{
+				height: 200px;
+				width:80%;
+				margin-top: 20%;
+			}
+			#popover .imgshow{
+				height: 160px;
+				width: 80%;
+			}
+			#popover .imgshow img{
+				width: auto;
+				height: auto;
+				max-height: 100%;
+				max-width: 100%;
+			}
+			#popover .imgbtn{
+				float: right;
+				margin-right: 20%;
+			}
+	</style>
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			 <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
@@ -25,10 +46,32 @@
 		</div>
 		<div class="mui-content orderView" style="margin-top: 40px;" >
 			<div class="list">
-			  <ul>
+			  <ul> 
 			  </ul>
 			</div>
 		</div>
+		<div id="popover" class="mui-popover">
+			<div class="imgshow">
+				<img src="images/1.jpg"/> 
+			</div>
+			
+			<div class="imgbtn">
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-outlined mui-right upload_com">确认</button>
+				<button type="button" class="mui-btn mui-btn-blue mui-btn-outlined mui-right upload_can">取消</button>
+				
+			</div>
+			
+			
+			
+		</div>
+		<div id="imgshow">
+			
+			
+		</div>
+		
+		
+		
+		
 	</body>
 	<script type="text/javascript">
 		mui.init({
@@ -51,6 +94,7 @@
 		//定义一个类型  获取所在状态
 		
 		mui.ready(function(){
+			 
 			//删除菜单
 			mui('.orderView').on('tap','.del_order',function(){
 				var userInfo = plus.storage.getItem('userInfo');
@@ -131,7 +175,28 @@
 				})
 
 			})
-			
+			mui('.orderView').on('tap','.upload',function(){ 
+				
+				plus.nativeUI.actionSheet({
+		            title: "上传图片",
+		            cancel: "取消",
+		            buttons: [{'title':'拍照'},{'title':'从手机上选择'}]
+		        }, function(b) { /*actionSheet 按钮点击事件*/
+		            switch (b.index) {
+		                case 0:
+		                    break;
+		                case 1:
+		                    getImage(); /*拍照*/
+		                    break;
+		                case 2:
+		                    galleryImg();/*打开相册*/
+		                    break;
+		                default:
+		                    break;
+		            }
+		        })
+				
+			})
 			
 				
 		})
@@ -147,6 +212,17 @@
 				this.classList.add('on');
 				getOrders();
 			})
+			mui('#popover').on('tap','.upload_can',function(){
+				mui('#popover').popover('toggle',document.getElementById("imgshow"));
+			})
+			mui('#popover').on('tap','.upload_com',function(){
+				
+				
+				
+				
+				mui('#popover').popover('toggle',document.getElementById("imgshow"));
+			})
+			
 			
 		})
 		
@@ -201,6 +277,14 @@
 								}
 								 
 							}
+							//是否需要上传图片
+							var isuploadHtml = '';
+							if(1==1){
+								isuploadHtml = '<a class="upload">上传图片</a>';
+							}else{
+								isuploadHtml ='';
+							}
+							
 							
 							html +='<li>'
 							  		+'<div class="top">'
@@ -216,13 +300,13 @@
 						 			+'</div>'
 							  		+'</div>'
 						    		+'<div class="btns">'
+						    		+ isuploadHtml
 						    		+ delHtml
 						    		+ supplementHtml
 							  		+'<a href="javascrript:;">在线咨询</a>'
 							  		+'</div>'
 							  		+'</li>';
 						}
-
 						$('.orderView .list ul').html(html); 
 					}else{ 
 						plus.nativeUI.closeWaiting()
@@ -235,6 +319,44 @@
 					mui.toast('系统异常');
 				}
 			});		
+		}
+		//拍照获取图片
+		function getImage() {
+		    var c = plus.camera.getCamera();
+		    c.captureImage(function(e) {
+		        plus.io.resolveLocalFileSystemURL(e, function(entry) {
+		        	var imgSrc = entry.toLocalURL() + "?version=" + new Date().getTime(); //拿到图片路径
+		        	$('.imgshow img').attr('src' , imgSrc);
+		    		mui('#popover').popover('toggle',document.getElementById("imgshow"));
+		           
+		        }, function(e) {
+		            console.log("读取拍照文件错误：" + e.message);
+		        });
+		    }, function(s) {
+		        console.log("error" + s);
+		    }, {
+		        filename: "_doc/camera/"
+		    })
+		}
+		// 从相册中选择图片
+		function galleryImg(){
+			
+		    plus.gallery.pick( function(e){
+		    	$('.imgshow img').attr('src' , e);
+		    	mui('#popover').popover('toggle',document.getElementById("imgshow"));
+		    }, function ( e ) {
+		    			
+		    	mui.toast( "取消选择图片" );
+		    },{
+		    	animation:true,
+		    	filter: "image",
+		    	multiple: false,
+		    	maximum: 1,
+		    	system: false,
+		    	onmaxed: function() {
+		    		plus.nativeUI.alert('最多只能选择1张图片');
+		    	}
+		    });
 		}
 	</script>
 </html>

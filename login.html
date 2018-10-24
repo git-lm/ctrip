@@ -84,7 +84,7 @@
 						success:function(data){
 							plus.nativeUI.closeWaiting();
 							if(data.state =='ok'){
-								mui.toast('登录成功');
+								mui.toast('登录成功1');
 								mui.later(function(){
 									var json = {};
 									json.username = username ; 
@@ -95,7 +95,10 @@
 									var main = plus.webview.getWebviewById('my.html');
 									main.reload(true);
 									var order = plus.webview.getWebviewById('order.html');
-									order.reload(true);
+									if(order != '' && order != null){
+										order.reload(true);
+									}
+									
 									
 									
 									mui.back();
